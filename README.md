@@ -18,10 +18,6 @@
     <br/>
     <a href="https://github.com/D4Vinci/Scrapling/actions/workflows/tests.yml" alt="Tests">
         <img alt="Tests" src="https://github.com/D4Vinci/Scrapling/actions/workflows/tests.yml/badge.svg"></a>
-    <a href="https://badge.fury.io/py/Scrapling" alt="PyPI version">
-        <img alt="PyPI version" src="https://badge.fury.io/py/Scrapling.svg"></a>
-    <a href="https://pepy.tech/project/scrapling" alt="PyPI Downloads">
-        <img alt="PyPI Downloads" src="https://static.pepy.tech/personalized-badge/scrapling?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=Downloads"></a>
     <br/>
     <a href="https://discord.gg/EMgGbDceNQ" alt="Discord" target="_blank">
       <img alt="Discord" src="https://img.shields.io/discord/1360786381042880532?style=social&logo=discord&link=https%3A%2F%2Fdiscord.gg%2FEMgGbDceNQ">
@@ -30,9 +26,7 @@
       <img alt="X (formerly Twitter) Follow" src="https://img.shields.io/twitter/follow/Scrapling_dev?style=social&logo=x&link=https%3A%2F%2Fx.com%2FScrapling_dev">
     </a>
     <br/>
-    <a href="https://pypi.org/project/scrapling/" alt="Supported Python versions">
-        <img alt="Supported Python versions" src="https://img.shields.io/pypi/pyversions/scrapling.svg"></a>
-</p>
+    </p>
 
 <p align="center">
     <a href="https://scrapling.readthedocs.io/en/latest/parsing/selection/"><strong>Selection methods</strong></a>
@@ -50,30 +44,34 @@
 
 Scrapling is an adaptive Web Scraping framework that handles everything from a single request to a full-scale crawl.
 
-Its parser learns from website changes and automatically relocates your elements when pages update. Its fetchers bypass anti-bot systems like Cloudflare Turnstile out of the box. And its spider framework lets you scale up to concurrent, multi-session crawls with pause/resume and automatic proxy rotation — all in a few lines of Python. One library, zero compromises.
+Its parser learns from website changes and automatically relocates your elements when pages update. Its fetchers bypass anti-bot systems like Cloudflare Turnstile out of the box. And its spider framework lets you scale up to concurrent, multi-session crawls with pause/resume and automatic proxy rotation — all in a few lines of TypeScript. One library, zero compromises.
 
 Blazing fast crawls with real-time stats and streaming. Built by Web Scrapers for Web Scrapers and regular users, there's something for everyone.
 
-```python
-from scrapling.fetchers import Fetcher, AsyncFetcher, StealthyFetcher, DynamicFetcher
-StealthyFetcher.adaptive = True
-p = StealthyFetcher.fetch('https://example.com', headless=True, network_idle=True)  # Fetch website under the radar!
-products = p.css('.product', auto_save=True)                                        # Scrape data that survives website design changes!
-products = p.css('.product', adaptive=True)                                         # Later, if the website structure changes, pass `adaptive=True` to find them!
+```typescript
+import { StealthyFetcher } from 'scrapling/fetchers';
+StealthyFetcher.adaptive = true;
+const p = await StealthyFetcher.fetch('https://example.com', { headless: true, networkIdle: true }); // Fetch website under the radar!
+let products = p.css('.product', { autoSave: true });                                  // Scrape data that survives website design changes!
+products = p.css('.product', { adaptive: true });                                      // Later, if the website structure changes, pass `adaptive=true` to find them!
 ```
 Or scale up to full crawls
-```python
-from scrapling.spiders import Spider, Response
+```typescript
+import { Spider, Response } from 'scrapling/spiders';
 
-class MySpider(Spider):
-  name = "demo"
-  start_urls = ["https://example.com/"]
+class MySpider extends Spider {
+  name = "demo";
+  startUrls = ["https://example.com/"];
 
-  async def parse(self, response: Response):
-      for item in response.css('.product'):
-          yield {"title": item.css('h2::text').get()}
+  async *parse(response: Response) {
+      for (const item of response.css('.product')) {
+          yield { title: item.css('h2::text').get() };
+      }
+  }
+}
 
-MySpider().start()
+const spider = new MySpider();
+spider.start();
 ```
 
 <p align="center">
@@ -144,13 +142,13 @@ MySpider().start()
 ## Key Features
 
 ### Spiders — A Full Crawling Framework
-- 🕷️ **Scrapy-like Spider API**: Define spiders with `start_urls`, async `parse` callbacks, and `Request`/`Response` objects.
+- 🕷️ **Robust Spider API**: Define spiders with `start_urls`, async `parse` callbacks, and `Request`/`Response` objects.
 - ⚡ **Concurrent Crawling**: Configurable concurrency limits, per-domain throttling, and download delays.
 - 🔄 **Multi-Session Support**: Unified interface for HTTP requests, and stealthy headless browsers in a single spider — route requests to different sessions by ID.
 - 💾 **Pause & Resume**: Checkpoint-based crawl persistence. Press Ctrl+C for a graceful shutdown; restart to resume from where you left off.
 - 📡 **Streaming Mode**: Stream scraped items as they arrive via `async for item in spider.stream()` with real-time stats — ideal for UI, pipelines, and long-running crawls.
 - 🛡️ **Blocked Request Detection**: Automatic detection and retry of blocked requests with customizable logic.
-- 📦 **Built-in Export**: Export results through hooks and your own pipeline or the built-in JSON/JSONL with `result.items.to_json()` / `result.items.to_jsonl()` respectively.
+- 📦 **Built-in Export**: Export results through hooks and your own pipeline or the built-in JSON/JSONL with `result.items.toJson()` / `result.items.toJsonl()` respectively.
 
 ### Advanced Websites Fetching with Session Support
 - **HTTP Requests**: Fast and stealthy HTTP requests with the `Fetcher` class. Can impersonate browsers' TLS fingerprint, headers, and use HTTP/3.
@@ -168,19 +166,19 @@ MySpider().start()
 - 🤖 **MCP Server to be used with AI**: Built-in MCP server for AI-assisted Web Scraping and data extraction. The MCP server features powerful, custom capabilities that leverage Scrapling to extract targeted content before passing it to the AI (Claude/Cursor/etc), thereby speeding up operations and reducing costs by minimizing token usage. ([demo video](https://www.youtube.com/watch?v=qyFk3ZNwOxE))
 
 ### High-Performance & battle-tested Architecture
-- 🚀 **Lightning Fast**: Optimized performance outperforming most Python scraping libraries.
+- 🚀 **Lightning Fast**: Optimized performance outperforming most TypeScript scraping libraries.
 - 🔋 **Memory Efficient**: Optimized data structures and lazy loading for a minimal memory footprint.
 - ⚡ **Fast JSON Serialization**: 10x faster than the standard library.
 - 🏗️ **Battle tested**: Not only does Scrapling have 92% test coverage and full type hints coverage, but it has been used daily by hundreds of Web Scrapers over the past year.
 
 ### Developer/Web Scraper Friendly Experience
-- 🎯 **Interactive Web Scraping Shell**: Optional built-in IPython shell with Scrapling integration, shortcuts, and new tools to speed up Web Scraping scripts development, like converting curl requests to Scrapling requests and viewing requests results in your browser.
+- 🎯 **Interactive Web Scraping Shell**: Optional built-in REPL with Scrapling integration, shortcuts, and new tools to speed up Web Scraping scripts development, like converting curl requests to Scrapling requests and viewing requests results in your browser.
 - 🚀 **Use it directly from the Terminal**: Optionally, you can use Scrapling to scrape a URL without writing a single line of code!
 - 🛠️ **Rich Navigation API**: Advanced DOM traversal with parent, sibling, and child navigation methods.
 - 🧬 **Enhanced Text Processing**: Built-in regex, cleaning methods, and optimized string operations.
 - 📝 **Auto Selector Generation**: Generate robust CSS/XPath selectors for any element.
-- 🔌 **Familiar API**: Similar to Scrapy/BeautifulSoup with the same pseudo-elements used in Scrapy/Parsel.
-- 📘 **Complete Type Coverage**: Full type hints for excellent IDE support and code completion. The entire codebase is automatically scanned with **PyRight** and **MyPy** with each change.
+- 🔌 **Familiar API**: Similar to BeautifulSoup with the same pseudo-elements used in Parsel.
+- 📘 **Complete Type Coverage**: Full type hints for excellent IDE support and code completion. The entire codebase is automatically written in **TypeScript**.
 - 🔋 **Ready Docker image**: With each release, a Docker image containing all browsers is automatically built and pushed.
 
 ## Getting Started
@@ -189,152 +187,163 @@ Let's give you a quick glimpse of what Scrapling can do without deep diving.
 
 ### Basic Usage
 HTTP requests with session support
-```python
-from scrapling.fetchers import Fetcher, FetcherSession
+```typescript
+import { Fetcher, FetcherSession } from 'scrapling/fetchers';
 
-with FetcherSession(impersonate='chrome') as session:  # Use latest version of Chrome's TLS fingerprint
-    page = session.get('https://quotes.toscrape.com/', stealthy_headers=True)
-    quotes = page.css('.quote .text::text').getall()
+const session = new FetcherSession({ impersonate: 'chrome' }); // Use latest version of Chrome's TLS fingerprint
+const page = await session.get('https://quotes.toscrape.com/', { stealthyHeaders: true });
+const quotes = page.css('.quote .text::text').getAll();
+await session.close();
 
-# Or use one-off requests
-page = Fetcher.get('https://quotes.toscrape.com/')
-quotes = page.css('.quote .text::text').getall()
+// Or use one-off requests
+const page2 = await Fetcher.get('https://quotes.toscrape.com/');
+const quotes2 = page2.css('.quote .text::text').getAll();
 ```
 Advanced stealth mode
-```python
-from scrapling.fetchers import StealthyFetcher, StealthySession
+```typescript
+import { StealthyFetcher, StealthySession } from 'scrapling/fetchers';
 
-with StealthySession(headless=True, solve_cloudflare=True) as session:  # Keep the browser open until you finish
-    page = session.fetch('https://nopecha.com/demo/cloudflare', google_search=False)
-    data = page.css('#padded_content a').getall()
+const session = new StealthySession({ headless: true, solveCloudflare: true }); // Keep the browser open until you finish
+const page = await session.fetch('https://nopecha.com/demo/cloudflare', { googleSearch: false });
+const data = page.css('#padded_content a').getAll();
+await session.close();
 
-# Or use one-off request style, it opens the browser for this request, then closes it after finishing
-page = StealthyFetcher.fetch('https://nopecha.com/demo/cloudflare')
-data = page.css('#padded_content a').getall()
+// Or use one-off request style, it opens the browser for this request, then closes it after finishing
+const page2 = await StealthyFetcher.fetch('https://nopecha.com/demo/cloudflare');
+const data2 = page2.css('#padded_content a').getAll();
 ```
 Full browser automation
-```python
-from scrapling.fetchers import DynamicFetcher, DynamicSession
+```typescript
+import { DynamicFetcher, DynamicSession } from 'scrapling/fetchers';
 
-with DynamicSession(headless=True, disable_resources=False, network_idle=True) as session:  # Keep the browser open until you finish
-    page = session.fetch('https://quotes.toscrape.com/', load_dom=False)
-    data = page.xpath('//span[@class="text"]/text()').getall()  # XPath selector if you prefer it
+const session = new DynamicSession({ headless: true, disableResources: false, networkIdle: true }); // Keep the browser open until you finish
+const page = await session.fetch('https://quotes.toscrape.com/', { loadDom: false });
+const data = page.xpath('//span[@class="text"]/text()').getAll(); // XPath selector if you prefer it
+await session.close();
 
-# Or use one-off request style, it opens the browser for this request, then closes it after finishing
-page = DynamicFetcher.fetch('https://quotes.toscrape.com/')
-data = page.css('.quote .text::text').getall()
+// Or use one-off request style, it opens the browser for this request, then closes it after finishing
+const page2 = await DynamicFetcher.fetch('https://quotes.toscrape.com/');
+const data2 = page2.css('.quote .text::text').getAll();
 ```
 
 ### Spiders
 Build full crawlers with concurrent requests, multiple session types, and pause/resume:
-```python
-from scrapling.spiders import Spider, Request, Response
+```typescript
+import { Spider, Response } from 'scrapling/spiders';
 
-class QuotesSpider(Spider):
-    name = "quotes"
-    start_urls = ["https://quotes.toscrape.com/"]
-    concurrent_requests = 10
+class QuotesSpider extends Spider {
+    name = "quotes";
+    startUrls = ["https://quotes.toscrape.com/"];
+    concurrentRequests = 10;
     
-    async def parse(self, response: Response):
-        for quote in response.css('.quote'):
+    async *parse(response: Response) {
+        for (const quote of response.css('.quote')) {
             yield {
-                "text": quote.css('.text::text').get(),
-                "author": quote.css('.author::text').get(),
-            }
+                text: quote.css('.text::text').get(),
+                author: quote.css('.author::text').get(),
+            };
+        }
             
-        next_page = response.css('.next a')
-        if next_page:
-            yield response.follow(next_page[0].attrib['href'])
+        const nextPage = response.css('.next a');
+        if (nextPage) {
+            yield response.follow(nextPage[0].attrib['href']);
+        }
+    }
+}
 
-result = QuotesSpider().start()
-print(f"Scraped {len(result.items)} quotes")
-result.items.to_json("quotes.json")
+const spider = new QuotesSpider();
+const result = await spider.start();
+console.log(`Scraped ${result.items.length} quotes`);
+result.items.toJson("quotes.json");
 ```
 Use multiple session types in a single spider:
-```python
-from scrapling.spiders import Spider, Request, Response
-from scrapling.fetchers import FetcherSession, AsyncStealthySession
+```typescript
+import { Spider, Request, Response } from 'scrapling/spiders';
+import { FetcherSession, AsyncStealthySession } from 'scrapling/fetchers';
 
-class MultiSessionSpider(Spider):
-    name = "multi"
-    start_urls = ["https://example.com/"]
+class MultiSessionSpider extends Spider {
+    name = "multi";
+    startUrls = ["https://example.com/"];
     
-    def configure_sessions(self, manager):
-        manager.add("fast", FetcherSession(impersonate="chrome"))
-        manager.add("stealth", AsyncStealthySession(headless=True), lazy=True)
+    configureSessions(manager: any) {
+        manager.add("fast", new FetcherSession({ impersonate: "chrome" }));
+        manager.add("stealth", new AsyncStealthySession({ headless: true }), { lazy: true });
+    }
     
-    async def parse(self, response: Response):
-        for link in response.css('a::attr(href)').getall():
-            # Route protected pages through the stealth session
-            if "protected" in link:
-                yield Request(link, sid="stealth")
-            else:
-                yield Request(link, sid="fast", callback=self.parse)  # explicit callback
+    async *parse(response: Response) {
+        for (const link of response.css('a::attr(href)').getAll()) {
+            // Route protected pages through the stealth session
+            if (link.includes("protected")) {
+                yield new Request(link, { sid: "stealth" });
+            } else {
+                yield new Request(link, { sid: "fast", callback: this.parse }); // explicit callback
+            }
+        }
+    }
+}
 ```
 Pause and resume long crawls with checkpoints by running the spider like this:
-```python
-QuotesSpider(crawldir="./crawl_data").start()
+```typescript
+const spider = new QuotesSpider({ crawlDir: "./crawl_data" });
+spider.start();
 ```
 Press Ctrl+C to pause gracefully — progress is saved automatically. Later, when you start the spider again, pass the same `crawldir`, and it will resume from where it stopped.
 
 ### Advanced Parsing & Navigation
-```python
-from scrapling.fetchers import Fetcher
+```typescript
+import { Fetcher } from 'scrapling/fetchers';
 
-# Rich element selection and navigation
-page = Fetcher.get('https://quotes.toscrape.com/')
+// Rich element selection and navigation
+const page = await Fetcher.get('https://quotes.toscrape.com/');
 
-# Get quotes with multiple selection methods
-quotes = page.css('.quote')  # CSS selector
-quotes = page.xpath('//div[@class="quote"]')  # XPath
-quotes = page.find_all('div', {'class': 'quote'})  # BeautifulSoup-style
-# Same as
-quotes = page.find_all('div', class_='quote')
-quotes = page.find_all(['div'], class_='quote')
-quotes = page.find_all(class_='quote')  # and so on...
-# Find element by text content
-quotes = page.find_by_text('quote', tag='div')
+// Get quotes with multiple selection methods
+let quotes = page.css('.quote'); // CSS selector
+quotes = page.xpath('//div[@class="quote"]'); // XPath
+quotes = page.findAll('div', { 'class': 'quote' }); // BeautifulSoup-style
+// Find element by text content
+quotes = page.findByText('quote', { tag: 'div' });
 
-# Advanced navigation
-quote_text = page.css('.quote')[0].css('.text::text').get()
-quote_text = page.css('.quote').css('.text::text').getall()  # Chained selectors
-first_quote = page.css('.quote')[0]
-author = first_quote.next_sibling.css('.author::text')
-parent_container = first_quote.parent
+// Advanced navigation
+let quoteText = page.css('.quote')[0].css('.text::text').get();
+quoteText = page.css('.quote').css('.text::text').getAll(); // Chained selectors
+const firstQuote = page.css('.quote')[0];
+const author = firstQuote.nextSibling.css('.author::text');
+const parentContainer = firstQuote.parent;
 
-# Element relationships and similarity
-similar_elements = first_quote.find_similar()
-below_elements = first_quote.below_elements()
+// Element relationships and similarity
+const similarElements = firstQuote.findSimilar();
+const belowElements = firstQuote.belowElements();
 ```
 You can use the parser right away if you don't want to fetch websites like below:
-```python
-from scrapling.parser import Selector
+```typescript
+import { Selector } from 'scrapling/parser';
 
-page = Selector("<html>...</html>")
+const page = new Selector("<html>...</html>");
 ```
 And it works precisely the same way!
 
 ### Async Session Management Examples
-```python
-import asyncio
-from scrapling.fetchers import FetcherSession, AsyncStealthySession, AsyncDynamicSession
+```typescript
+import { FetcherSession, AsyncStealthySession } from 'scrapling/fetchers';
 
-async with FetcherSession(http3=True) as session:  # `FetcherSession` is context-aware and can work in both sync/async patterns
-    page1 = session.get('https://quotes.toscrape.com/')
-    page2 = session.get('https://quotes.toscrape.com/', impersonate='firefox135')
+const session = new FetcherSession({ http3: true }); // `FetcherSession` is context-aware and can work in both sync/async patterns
+const page1 = await session.get('https://quotes.toscrape.com/');
+const page2 = await session.get('https://quotes.toscrape.com/', { impersonate: 'firefox135' });
+await session.close();
 
-# Async session usage
-async with AsyncStealthySession(max_pages=2) as session:
-    tasks = []
-    urls = ['https://example.com/page1', 'https://example.com/page2']
-    
-    for url in urls:
-        task = session.fetch(url)
-        tasks.append(task)
-    
-    print(session.get_pool_stats())  # Optional - The status of the browser tabs pool (busy/free/error)
-    results = await asyncio.gather(*tasks)
-    print(session.get_pool_stats())
+// Async session usage
+const asyncSession = new AsyncStealthySession({ maxPages: 2 });
+const tasks = [];
+const urls = ['https://example.com/page1', 'https://example.com/page2'];
+
+for (const url of urls) {
+    tasks.push(asyncSession.fetch(url));
+}
+
+console.log(asyncSession.getPoolStats()); // Optional - The status of the browser tabs pool (busy/free/error)
+const results = await Promise.all(tasks);
+console.log(asyncSession.getPoolStats());
+await asyncSession.close();
 ```
 
 ## CLI & Interactive Shell
@@ -367,9 +376,7 @@ Scrapling isn't just powerful—it's also blazing fast. The following benchmarks
 | # |      Library      | Time (ms) | vs Scrapling | 
 |---|:-----------------:|:---------:|:------------:|
 | 1 |     Scrapling     |   2.02    |     1.0x     |
-| 2 |   Parsel/Scrapy   |   2.04    |     1.01     |
 | 3 |     Raw Lxml      |   2.54    |    1.257     |
-| 4 |      PyQuery      |   24.17   |     ~12x     |
 | 5 |    Selectolax     |   82.63   |     ~41x     |
 | 6 |  MechanicalSoup   |  1549.71  |   ~767.1x    |
 | 7 |   BS4 with Lxml   |  1584.31  |   ~784.3x    |
@@ -386,14 +393,14 @@ Scrapling's adaptive element finding capabilities significantly outperform alter
 | AutoScraper |   12.45   |    5.209x    |
 
 
-> All benchmarks represent averages of 100+ runs. See [benchmarks.py](https://github.com/D4Vinci/Scrapling/blob/main/benchmarks.py) for methodology.
+> All benchmarks represent averages of 100+ runs. See [benchmarks.ts](https://github.com/D4Vinci/Scrapling/blob/main/benchmarks.ts) for methodology.
 
 ## Installation
 
-Scrapling requires Python 3.10 or higher:
+Scrapling requires TypeScript 3.10 or higher:
 
 ```bash
-pip install scrapling
+bun install scrapling
 ```
 
 This installation only includes the parser engine and its dependencies, without any fetchers or commandline dependencies.
@@ -402,7 +409,7 @@ This installation only includes the parser engine and its dependencies, without 
 
 1. If you are going to use any of the extra features below, the fetchers, or their classes, you will need to install fetchers' dependencies and their browser dependencies as follows:
     ```bash
-    pip install "scrapling[fetchers]"
+    bun install scrapling
     
     scrapling install           # normal install
     scrapling install  --force  # force reinstall
@@ -411,7 +418,7 @@ This installation only includes the parser engine and its dependencies, without 
     This downloads all browsers, along with their system dependencies and fingerprint manipulation dependencies.
 
     Or you can install them from the code instead of running a command like this:
-    ```python
+    ```typescript
     from scrapling.cli import install
     
     install([], standalone_mode=False)          # normal install
@@ -421,15 +428,15 @@ This installation only includes the parser engine and its dependencies, without 
 2. Extra features:
    - Install the MCP server feature:
        ```bash
-       pip install "scrapling[ai]"
+       bun install scrapling
        ```
    - Install shell features (Web Scraping shell and the `extract` command): 
        ```bash
-       pip install "scrapling[shell]"
+       bun install scrapling
        ```
    - Install everything: 
        ```bash
-       pip install "scrapling[all]"
+       bun install scrapling
        ```
    Remember that you need to install the browser dependencies with `scrapling install` after any of these extras (if you didn't already)
 
@@ -472,7 +479,7 @@ This work is licensed under the BSD-3-Clause License.
 ## Acknowledgments
 
 This project includes code adapted from:
-- Parsel (BSD License)—Used for [translator](https://github.com/D4Vinci/Scrapling/blob/main/scrapling/core/translator.py) submodule
+- Parsel (BSD License)—Used for [translator](https://github.com/D4Vinci/Scrapling/blob/main/scrapling/core/translator.ts) submodule
 
 ---
 <div align="center"><small>Designed & crafted with ❤️ by Karim Shoair.</small></div><br>
