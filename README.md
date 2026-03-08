@@ -419,10 +419,10 @@ This installation only includes the parser engine and its dependencies, without 
 
     Or you can install them from the code instead of running a command like this:
     ```typescript
-    from scrapling.cli import install
+    import { install } from "scrapling/cli";
     
-    install([], standalone_mode=False)          # normal install
-    install(["--force"], standalone_mode=False) # force reinstall
+    install([], false);          // normal install
+    install(["--force"], false); // force reinstall
     ```
 
 2. Extra features:
